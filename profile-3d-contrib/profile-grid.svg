@@ -1053,11 +1053,11 @@ fill-opacity: 0.5;
     </g>
     <g transform="translate(720 480.3)">
       <animateTransform attributeName="transform" type="translate" values="720 489.04;720 480.3" dur="3s" repeatCount="1" />
-      <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-3" />
-      <rect stroke="none" x="0" y="0" width="18" height="10.17" transform="skewY(30) scale(1 1.15)" class="cont-left-3">
+      <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-2" />
+      <rect stroke="none" x="0" y="0" width="18" height="10.17" transform="skewY(30) scale(1 1.15)" class="cont-left-2">
         <animate attributeName="height" values="2.6;10.17" dur="3s" repeatCount="1" />
       </rect>
-      <rect stroke="none" x="0" y="0" width="18" height="10.17" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-3">
+      <rect stroke="none" x="0" y="0" width="18" height="10.17" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-2">
         <animate attributeName="height" values="2.6;10.17" dur="3s" repeatCount="1" />
       </rect>
     </g>
@@ -1383,11 +1383,11 @@ fill-opacity: 0.5;
     </g>
     <g transform="translate(900 581.56)">
       <animateTransform attributeName="transform" type="translate" values="900 592.97;900 581.56" dur="3s" repeatCount="1" />
-      <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-4" />
-      <rect stroke="none" x="0" y="0" width="18" height="12.47" transform="skewY(30) scale(1 1.15)" class="cont-left-4">
+      <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-3" />
+      <rect stroke="none" x="0" y="0" width="18" height="12.47" transform="skewY(30) scale(1 1.15)" class="cont-left-3">
         <animate attributeName="height" values="2.6;12.47" dur="3s" repeatCount="1" />
       </rect>
-      <rect stroke="none" x="0" y="0" width="18" height="12.47" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-4">
+      <rect stroke="none" x="0" y="0" width="18" height="12.47" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-3">
         <animate attributeName="height" values="2.6;12.47" dur="3s" repeatCount="1" />
       </rect>
     </g>
@@ -1768,11 +1768,11 @@ fill-opacity: 0.5;
     </g>
     <g transform="translate(980 763.76)">
       <animateTransform attributeName="transform" type="translate" values="980 777.72;980 763.76" dur="3s" repeatCount="1" />
-      <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-4" />
-      <rect stroke="none" x="0" y="0" width="18" height="14.68" transform="skewY(30) scale(1 1.15)" class="cont-left-4">
+      <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-3" />
+      <rect stroke="none" x="0" y="0" width="18" height="14.68" transform="skewY(30) scale(1 1.15)" class="cont-left-3">
         <animate attributeName="height" values="2.6;14.68" dur="3s" repeatCount="1" />
       </rect>
-      <rect stroke="none" x="0" y="0" width="18" height="14.68" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-4">
+      <rect stroke="none" x="0" y="0" width="18" height="14.68" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-3">
         <animate attributeName="height" values="2.6;14.68" dur="3s" repeatCount="1" />
       </rect>
     </g>
@@ -1848,11 +1848,11 @@ fill-opacity: 0.5;
     </g>
     <g transform="translate(1040 780.52)">
       <animateTransform attributeName="transform" type="translate" values="1040 789.26;1040 780.52" dur="3s" repeatCount="1" />
-      <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-3" />
-      <rect stroke="none" x="0" y="0" width="18" height="10.17" transform="skewY(30) scale(1 1.15)" class="cont-left-3">
+      <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-2" />
+      <rect stroke="none" x="0" y="0" width="18" height="10.17" transform="skewY(30) scale(1 1.15)" class="cont-left-2">
         <animate attributeName="height" values="2.6;10.17" dur="3s" repeatCount="1" />
       </rect>
-      <rect stroke="none" x="0" y="0" width="18" height="10.17" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-3">
+      <rect stroke="none" x="0" y="0" width="18" height="10.17" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-2">
         <animate attributeName="height" values="2.6;10.17" dur="3s" repeatCount="1" />
       </rect>
     </g>
@@ -1931,20 +1931,20 @@ fill-opacity: 0.5;
         <animate attributeName="height" values="2.6;31.34" dur="3s" repeatCount="1" />
       </rect>
     </g>
-    <g transform="translate(1120 775.31)">
-      <animateTransform attributeName="transform" type="translate" values="1120 789.26;1120 775.31" dur="3s" repeatCount="1" />
+    <g transform="translate(1120 770.5)">
+      <animateTransform attributeName="transform" type="translate" values="1120 789.26;1120 770.5" dur="3s" repeatCount="1" />
       <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-4" />
-      <rect stroke="none" x="0" y="0" width="18" height="14.68" transform="skewY(30) scale(1 1.15)" class="cont-left-4">
-        <animate attributeName="height" values="2.6;14.68" dur="3s" repeatCount="1" />
+      <rect stroke="none" x="0" y="0" width="18" height="18.85" transform="skewY(30) scale(1 1.15)" class="cont-left-4">
+        <animate attributeName="height" values="2.6;18.85" dur="3s" repeatCount="1" />
       </rect>
-      <rect stroke="none" x="0" y="0" width="18" height="14.68" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-4">
-        <animate attributeName="height" values="2.6;14.68" dur="3s" repeatCount="1" />
+      <rect stroke="none" x="0" y="0" width="18" height="18.85" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-4">
+        <animate attributeName="height" values="2.6;18.85" dur="3s" repeatCount="1" />
       </rect>
     </g>
   </g>
   <text x="40" y="44" font-size="26" font-weight="700" text-anchor="start" fill="#eeeeff">Contribution activity</text>
   <text x="40" y="72" font-size="15" font-weight="400" text-anchor="start" fill="#aaaaaa">Past 12 months</text>
   <text x="1240" y="44" font-size="15" font-weight="400" text-anchor="end" fill="#aaaaaa">2025-10-26 — 2026-10-28</text>
-  <text x="40" y="822" font-size="30" font-weight="700" text-anchor="start" fill="#ffc837">93</text>
+  <text x="40" y="822" font-size="30" font-weight="700" text-anchor="start" fill="#ffc837">95</text>
   <text x="88" y="822" font-size="22" font-weight="400" text-anchor="start" fill="#eeeeff">contributions</text>
 </svg>
