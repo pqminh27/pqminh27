@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="380" viewBox="0 0 1000 380" role="img">
+  <style>* { font-family: "Ubuntu", "Helvetica", "Arial", sans-serif; }</style>
+  <rect x="0" y="0" width="1000" height="380" fill="#00000f" />
+  <rect x="24" y="24" width="460" height="332" rx="18" fill="#090b1a" stroke="#25283d" stroke-width="1.5" />
+  <rect x="516" y="24" width="460" height="332" rx="18" fill="#090b1a" stroke="#25283d" stroke-width="1.5" />
+  <text x="50" y="66" font-size="22" font-weight="700" text-anchor="start" fill="#eeeeff">Contribution types</text>
+  <text x="50" y="90" font-size="14" font-weight="400" text-anchor="start" fill="#9b9caf">Past 12 months</text>
+  <text x="542" y="66" font-size="22" font-weight="700" text-anchor="start" fill="#eeeeff">Commit activity by language</text>
+  <text x="542" y="90" font-size="14" font-weight="400" text-anchor="start" fill="#9b9caf">21 commits · top languages and other</text>
+  <text x="54" y="132" font-size="22" font-weight="700" text-anchor="start" fill="#ffc837">21</text>
+  <text x="106" y="132" font-size="16" font-weight="400" text-anchor="start" fill="#eeeeff">Commits</text>
+  <line x1="50" y1="144" x2="458" y2="144" stroke="#1b1d30" stroke-width="1" />
+  <text x="54" y="174" font-size="22" font-weight="700" text-anchor="start" fill="#ffc837">35</text>
+  <text x="106" y="174" font-size="16" font-weight="400" text-anchor="start" fill="#eeeeff">Issues</text>
+  <line x1="50" y1="186" x2="458" y2="186" stroke="#1b1d30" stroke-width="1" />
+  <text x="54" y="216" font-size="22" font-weight="700" text-anchor="start" fill="#ffc837">26</text>
+  <text x="106" y="216" font-size="16" font-weight="400" text-anchor="start" fill="#eeeeff">Pull requests</text>
+  <line x1="50" y1="228" x2="458" y2="228" stroke="#1b1d30" stroke-width="1" />
+  <text x="54" y="258" font-size="22" font-weight="700" text-anchor="start" fill="#ffc837">0</text>
+  <text x="106" y="258" font-size="16" font-weight="400" text-anchor="start" fill="#eeeeff">Reviews</text>
+  <line x1="50" y1="270" x2="458" y2="270" stroke="#1b1d30" stroke-width="1" />
+  <text x="54" y="300" font-size="22" font-weight="700" text-anchor="start" fill="#ffc837">8</text>
+  <text x="106" y="300" font-size="16" font-weight="400" text-anchor="start" fill="#eeeeff">Repository contributions</text>
+  <text x="542" y="127" font-size="15" font-weight="400" text-anchor="start" fill="#eeeeff">Python</text>
+  <rect x="660" y="117" width="180" height="9" rx="4.5" fill="#1a1c2b" />
+  <rect x="660" y="117" width="68.6" height="9" rx="4.5" fill="#3572A5" />
+  <text x="952" y="127" font-size="14" font-weight="400" text-anchor="end" fill="#9b9caf">8 · 38%</text>
+  <text x="542" y="161" font-size="15" font-weight="400" text-anchor="start" fill="#eeeeff">Rust</text>
+  <rect x="660" y="151" width="180" height="9" rx="4.5" fill="#1a1c2b" />
+  <rect x="660" y="151" width="34.3" height="9" rx="4.5" fill="#dea584" />
+  <text x="952" y="161" font-size="14" font-weight="400" text-anchor="end" fill="#9b9caf">4 · 19%</text>
+  <text x="542" y="195" font-size="15" font-weight="400" text-anchor="start" fill="#eeeeff">TypeScript</text>
+  <rect x="660" y="185" width="180" height="9" rx="4.5" fill="#1a1c2b" />
+  <rect x="660" y="185" width="34.3" height="9" rx="4.5" fill="#3178c6" />
+  <text x="952" y="195" font-size="14" font-weight="400" text-anchor="end" fill="#9b9caf">4 · 19%</text>
+  <text x="542" y="229" font-size="15" font-weight="400" text-anchor="start" fill="#eeeeff">HTML</text>
+  <rect x="660" y="219" width="180" height="9" rx="4.5" fill="#1a1c2b" />
+  <rect x="660" y="219" width="25.7" height="9" rx="4.5" fill="#e34c26" />
+  <text x="952" y="229" font-size="14" font-weight="400" text-anchor="end" fill="#9b9caf">3 · 14%</text>
+  <text x="542" y="263" font-size="15" font-weight="400" text-anchor="start" fill="#eeeeff">JavaScript</text>
+  <rect x="660" y="253" width="180" height="9" rx="4.5" fill="#1a1c2b" />
+  <rect x="660" y="253" width="8.6" height="9" rx="4.5" fill="#f1e05a" />
+  <text x="952" y="263" font-size="14" font-weight="400" text-anchor="end" fill="#9b9caf">1 · 5%</text>
+  <text x="542" y="297" font-size="15" font-weight="400" text-anchor="start" fill="#eeeeff">Other</text>
+  <rect x="660" y="287" width="180" height="9" rx="4.5" fill="#1a1c2b" />
+  <rect x="660" y="287" width="8.6" height="9" rx="4.5" fill="#444444" />
+  <text x="952" y="297" font-size="14" font-weight="400" text-anchor="end" fill="#9b9caf">1 · 5%</text>
+</svg>

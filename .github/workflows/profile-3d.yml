@@ -17,6 +17,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
+      - name: Build profile visuals
+        run: python3 .github/scripts/build-profile-visuals.py
       - name: Commit generated contribution images
         run: |
           git config user.name "github-actions[bot]"
