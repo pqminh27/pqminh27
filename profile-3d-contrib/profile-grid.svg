@@ -1941,10 +1941,15 @@ fill-opacity: 0.5;
         <animate attributeName="height" values="2.6;18.85" dur="3s" repeatCount="1" />
       </rect>
     </g>
+    <g transform="translate(1100 800.81)">
+      <rect stroke="none" x="0" y="0" width="18" height="18" transform="skewY(-30) skewX(40.89) scale(1 1.15)" class="cont-top-0" />
+      <rect stroke="none" x="0" y="0" width="18" height="2.6" transform="skewY(30) scale(1 1.15)" class="cont-left-0" />
+      <rect stroke="none" x="0" y="0" width="18" height="2.6" transform="translate(18 10.39) skewY(-30) scale(1 1.15)" class="cont-right-0" />
+    </g>
   </g>
   <text x="40" y="44" font-size="26" font-weight="700" text-anchor="start" fill="#eeeeff">Contribution activity</text>
   <text x="40" y="72" font-size="15" font-weight="400" text-anchor="start" fill="#aaaaaa">Past 12 months</text>
-  <text x="1240" y="44" font-size="15" font-weight="400" text-anchor="end" fill="#aaaaaa">2025-10-26 — 2026-10-28</text>
+  <text x="1240" y="44" font-size="15" font-weight="400" text-anchor="end" fill="#aaaaaa">2025-10-26 — 2026-10-29</text>
   <text x="40" y="822" font-size="30" font-weight="700" text-anchor="start" fill="#ffc837">95</text>
   <text x="88" y="822" font-size="22" font-weight="400" text-anchor="start" fill="#eeeeff">contributions</text>
 </svg>
