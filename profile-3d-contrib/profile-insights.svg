@@ -20,7 +20,7 @@
   <text x="54" y="258" font-size="22" font-weight="700" text-anchor="start" fill="#ffc837">0</text>
   <text x="106" y="258" font-size="16" font-weight="400" text-anchor="start" fill="#eeeeff">Reviews</text>
   <line x1="50" y1="270" x2="458" y2="270" stroke="#1b1d30" stroke-width="1" />
-  <text x="54" y="300" font-size="22" font-weight="700" text-anchor="start" fill="#ffc837">8</text>
+  <text x="54" y="300" font-size="22" font-weight="700" text-anchor="start" fill="#ffc837">12</text>
   <text x="106" y="300" font-size="16" font-weight="400" text-anchor="start" fill="#eeeeff">Repository contributions</text>
   <text x="542" y="127" font-size="15" font-weight="400" text-anchor="start" fill="#eeeeff">Python</text>
   <rect x="660" y="117" width="180" height="9" rx="4.5" fill="#1a1c2b" />
