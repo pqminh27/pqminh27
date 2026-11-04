@@ -3,9 +3,14 @@
 **Software Engineer** · Contributing to AI infrastructure and developer tools.
 
 <p align="center">
-  <img src="./profile-3d-contrib/profile-grid.svg" alt="Isometric view of my GitHub contributions over the past year" width="100%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./profile-assets/github-contribution-grid-snake-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="./profile-assets/github-contribution-grid-snake.svg">
+    <img src="./profile-assets/github-contribution-grid-snake.svg" alt="Animated snake moving through my GitHub contribution calendar" width="100%">
+  </picture>
 </p>
 
 <p align="center">
-  <img src="./profile-3d-contrib/profile-insights.svg" alt="Contribution counts by type and commit activity by language" width="100%">
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=pqminh27&amp;theme=github_dark" alt="GitHub contribution totals" width="49%">
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=pqminh27&amp;theme=github_dark" alt="Languages used in my commits" width="49%">
 </p>
