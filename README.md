@@ -11,6 +11,5 @@
 </p>
 
 <p align="center">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=pqminh27&amp;theme=github_dark" alt="GitHub contribution totals" width="49%">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=pqminh27&amp;theme=github_dark" alt="Languages used in my commits" width="49%">
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=pqminh27&amp;theme=github_dark" alt="GitHub activity summary" width="70%">
 </p>
