@@ -2,7 +2,7 @@ name: Update contribution snake
 
 on:
   schedule:
-    - cron: "23 18 * * *"
+    - cron: "0 17 * * *"
   workflow_dispatch:
 
 permissions:
