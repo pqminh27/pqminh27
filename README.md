@@ -6,7 +6,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./profile-assets/github-contribution-grid-snake-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="./profile-assets/github-contribution-grid-snake.svg">
-    <img src="./profile-assets/github-contribution-grid-snake.svg" alt="Animated snake moving through my GitHub contribution calendar" width="100%">
+    <img src="./profile-assets/github-contribution-grid-snake.svg" alt="Animated snake growing as it eats active contribution days" width="100%">
   </picture>
 </p>
 

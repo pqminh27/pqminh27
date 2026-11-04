@@ -17,7 +17,8 @@ class ProfileSnakeWorkflowTest(unittest.TestCase):
             for path in (ROOT / ".github/workflows").glob("*.yml")
         )
 
-        self.assertIn("Platane/snk/svg-only@", workflows)
+        self.assertIn("dahan8473/snake-and-commits@", workflows)
+        self.assertIn("prepare_snake.py", workflows)
         self.assertIn("schedule:", workflows)
         self.assertIn("workflow_dispatch:", workflows)
         for asset in SNAKE_ASSETS:

@@ -14,13 +14,19 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: mkdir -p profile-assets
-      - name: Generate contribution snake
-        uses: Platane/snk/svg-only@d8f6715049803e982ee5ff501b6b9b7d5deeb09b # v3
+      - name: Generate growing contribution snake
+        uses: dahan8473/snake-and-commits@4ec3eec8531727c9679cd9f8e1c7d60ba1dc7b23
         with:
-          github_user_name: ${{ github.repository_owner }}
-          outputs: |
-            profile-assets/github-contribution-grid-snake.svg
-            profile-assets/github-contribution-grid-snake-dark.svg?palette=github-dark
+          github_user: ${{ github.repository_owner }}
+          output: ${{ runner.temp }}/github-contribution-grid-snake.svg
+          theme: green
+          counter: "false"
+      - name: Create light and dark theme images
+        run: >-
+          python3 .github/scripts/prepare_snake.py
+          "$RUNNER_TEMP/github-contribution-grid-snake.svg"
+          profile-assets/github-contribution-grid-snake-dark.svg
+          profile-assets/github-contribution-grid-snake.svg
       - name: Commit generated snake images
         run: |
           git config user.name "github-actions[bot]"
