@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import unittest
 
 
@@ -17,7 +18,7 @@ class ProfileSnakeWorkflowTest(unittest.TestCase):
             for path in (ROOT / ".github/workflows").glob("*.yml")
         )
 
-        self.assertIn("dahan8473/snake-and-commits@", workflows)
+        self.assertIn(".github/scripts/generate_snake.py", workflows)
         self.assertIn("prepare_snake.py", workflows)
         self.assertIn("schedule:", workflows)
         self.assertIn("workflow_dispatch:", workflows)
@@ -25,6 +26,21 @@ class ProfileSnakeWorkflowTest(unittest.TestCase):
             self.assertIn(asset, readme)
             self.assertIn(asset, workflows)
         self.assertNotIn("profile-3d-contrib/profile-grid.svg", readme)
+
+    def test_generated_snake_variants_include_all_seven_rows_in_every_week(self):
+        for asset in SNAKE_ASSETS:
+            svg = (ROOT / asset).read_text()
+            columns = {}
+            for column, row in re.findall(r'class="c(\d+)_(\d+)"', svg):
+                columns.setdefault(int(column), set()).add(int(row))
+
+            self.assertTrue(columns, f"{asset} has no contribution cells")
+            for column, rows in columns.items():
+                self.assertEqual(
+                    set(range(7)),
+                    rows,
+                    f"{asset} week {column} is missing rows {sorted(set(range(7)) - rows)}",
+                )
 
 
 if __name__ == "__main__":
