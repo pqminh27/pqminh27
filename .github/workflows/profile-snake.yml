@@ -15,8 +15,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: mkdir -p profile-assets
       - name: Generate growing contribution snake
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: >-
           python3 .github/scripts/generate_snake.py
           --user "${{ github.repository_owner }}"

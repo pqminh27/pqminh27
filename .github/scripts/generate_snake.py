@@ -11,21 +11,21 @@ Usage:
     python generate.py --user OCTOCAT --output dist/snake.svg
     python generate.py --user OCTOCAT --theme blue --frame
 
-Auth: set GH_TOKEN (or GITHUB_TOKEN) to any token that can read public
-contribution data. In GitHub Actions, ${{ github.token }} works.
+Data comes from the public GitHub profile contribution calendar.
 """
 # Adapted from dahan8473/snake-and-commits at
 # 4ec3eec8531727c9679cd9f8e1c7d60ba1dc7b23. Local change: normalize partial
 # calendar weeks by weekday before solving/rendering. See LICENSE.snake-and-commits.
 import argparse
-import json
 import os
-import subprocess
+import re
 import sys
+import urllib.parse
 import urllib.request
 from bisect import bisect_right
 from collections import deque
-from datetime import date, datetime, timedelta, timezone
+from datetime import date
+from html.parser import HTMLParser
 
 CELL, GAP = 11, 3
 PITCH = CELL + GAP
@@ -34,8 +34,6 @@ STEPS_PER_SEC = 10
 PAUSE_STEPS = 26
 BASE_LEN = 3
 
-LEVEL = {"NONE": 0, "FIRST_QUARTILE": 1, "SECOND_QUARTILE": 2,
-         "THIRD_QUARTILE": 3, "FOURTH_QUARTILE": 4}
 MONTHS = ["", "jan", "feb", "mar", "apr", "may", "jun",
           "jul", "aug", "sep", "oct", "nov", "dec"]
 
@@ -69,39 +67,69 @@ THEMES = {
 }
 
 
-def token():
-    for k in ("GH_TOKEN", "GITHUB_TOKEN"):
-        if os.environ.get(k):
-            return os.environ[k]
-    try:
-        return subprocess.run(["gh", "auth", "token"], capture_output=True, text=True).stdout.strip()
-    except FileNotFoundError:
-        return ""
+class ProfileCalendar(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.cells = {}
+        self.counts = {}
+        self.tooltip = None
+        self.tooltip_text = []
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "td" and "ContributionCalendar-day" in attrs.get("class", "").split():
+            self.cells[attrs["id"]] = (
+                int(attrs["data-ix"]), attrs["data-date"], int(attrs["data-level"]),
+            )
+        elif tag == "tool-tip" and attrs.get("for") in self.cells:
+            self.tooltip = attrs["for"]
+            self.tooltip_text = []
+
+    def handle_data(self, data):
+        if self.tooltip is not None:
+            self.tooltip_text.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == "tool-tip" and self.tooltip is not None:
+            match = re.match(r"^(No|[0-9,]+) contributions? on ", "".join(self.tooltip_text).strip())
+            if match:
+                count = match[1]
+                self.counts[self.tooltip] = 0 if count == "No" else int(count.replace(",", ""))
+            self.tooltip = None
 
 
-def fetch_weeks(user, tok):
-    now = datetime.now(timezone.utc)
-    frm = (now - timedelta(days=365)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    q = """
-    query($login:String!,$from:DateTime!){user(login:$login){contributionsCollection(from:$from){
-      contributionCalendar{weeks{contributionDays{date contributionCount contributionLevel}}}}}}"""
+def fetch_weeks(user):
+    login = urllib.parse.quote(user, safe="")
     req = urllib.request.Request(
-        "https://api.github.com/graphql",
-        data=json.dumps({"query": q, "variables": {"login": user, "from": frm}}).encode(),
-        headers={"Authorization": f"Bearer {tok}", "User-Agent": user},
+        f"https://github.com/users/{login}/contributions",
+        headers={"User-Agent": "profile-contribution-snake", "Accept-Language": "en"},
     )
-    with urllib.request.urlopen(req, timeout=30) as r:
-        data = json.load(r)
-    if data.get("errors"):
-        sys.exit(f"GitHub API error: {data['errors']}")
-    return data["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
+    with urllib.request.urlopen(req, timeout=30) as response:
+        calendar = ProfileCalendar()
+        calendar.feed(response.read().decode("utf-8"))
+        calendar.close()
+
+    if not calendar.cells or calendar.cells.keys() != calendar.counts.keys():
+        raise ValueError("GitHub profile calendar is missing contribution cells or counts.")
+
+    weeks = {}
+    for cell_id, (column, day, level) in calendar.cells.items():
+        weeks.setdefault(column, []).append({
+            "date": day,
+            "contributionCount": calendar.counts[cell_id],
+            "contributionLevel": level,
+        })
+    return [
+        {"contributionDays": sorted(days, key=lambda day: day["date"])}
+        for _, days in sorted(weeks.items())
+    ]
 
 
 def calendar_grid(weeks):
     """Return 7-row contribution and count grids, with Sunday at row zero.
 
-    GitHub omits days outside the requested 365-day window from the first and
-    last weeks. Place returned days by their actual weekday and leave omitted
+    GitHub omits days outside its displayed calendar from partial weeks.
+    Place returned days by their actual weekday and leave omitted
     days empty, so pathfinding and rendering both use the same complete grid.
     """
     grid, counts = [], []
@@ -110,7 +138,7 @@ def calendar_grid(weeks):
         week_counts = [0] * 7
         for day in week["contributionDays"]:
             row = (date.fromisoformat(day["date"]).weekday() + 1) % 7
-            levels[row] = LEVEL[day["contributionLevel"]]
+            levels[row] = day["contributionLevel"]
             week_counts[row] = day["contributionCount"]
         grid.append(levels)
         counts.append(week_counts)
@@ -226,7 +254,7 @@ def solve(grid, cap=999):
     return route, eats, growth, BASE_LEN + len(growth), len(remaining)
 
 
-def render(grid, counts, months, route, eats, growth, theme, opts):
+def render(grid, counts, months, route, eats, growth, theme, opts, generated_at=None):
     t = THEMES[theme]
     ncols = len(grid)
     n = len(route)
@@ -294,6 +322,10 @@ def render(grid, counts, months, route, eats, growth, theme, opts):
         body.append(f'<rect x="{lx+i*(CELL+3)}" y="{ly}" width="{CELL}" height="{CELL}" rx="2.5" fill="{t["levels"][i]}"/>')
     body.append(f'<text class="lab" x="{lx+5*(CELL+3)+8}" y="{ly+9}">more</text>')
 
+    if generated_at:
+        contributions = sum(map(sum, counts))
+        body.append(f'<text class="lab" x="{MX}" y="{ly+9}">{contributions:,} contributions</text>')
+
     if opts.counter:
         total_commits = sum(counts[c][r] for _, (c, r) in eats)
         states, val = [(0, 0)], 0
@@ -318,7 +350,8 @@ def render(grid, counts, months, route, eats, growth, theme, opts):
         frame_open = f'<rect x="1" y="1" width="{w-2}" height="{h-2}" rx="12" fill="{t["frame_bg"]}" stroke="{t["frame_border"]}"/>'
         frame_close = f'<rect x="1" y="1" width="{w-2}" height="{h-2}" rx="12" fill="none" stroke="{t["frame_border"]}"/>'
     mono = "ui-monospace,'SF Mono',Menlo,Consolas,monospace"
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}">
+    timestamp = f' data-generated-at="{generated_at}"' if generated_at else ""
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}"{timestamp}>
   <style>
     .lab {{ font-family:{mono}; font-size:9.5px; fill:{t['text']}; }}
     .cnt {{ font-family:{mono}; font-size:9.5px; fill:{t['snake']}; }}
@@ -332,24 +365,7 @@ def render(grid, counts, months, route, eats, growth, theme, opts):
 """
 
 
-def main():
-    ap = argparse.ArgumentParser(description="Turn a GitHub contribution graph into a Snake game (animated SVG).")
-    ap.add_argument("--user", default=os.environ.get("GH_USER") or os.environ.get("GITHUB_REPOSITORY_OWNER"),
-                    help="GitHub username (defaults to the Actions repo owner)")
-    ap.add_argument("--output", default="dist/snake.svg", help="output svg path")
-    ap.add_argument("--theme", default="green", choices=list(THEMES), help="color theme")
-    ap.add_argument("--frame", action="store_true", help="draw a rounded window frame")
-    ap.add_argument("--no-counter", dest="counter", action="store_false", help="hide the commits-eaten counter")
-    ap.set_defaults(counter=True)
-    opts = ap.parse_args()
-    if not opts.user:
-        sys.exit("error: --user is required (or set GH_USER / run in Actions)")
-
-    tok = token()
-    if not tok:
-        sys.exit("error: no token found. set GH_TOKEN (or GITHUB_TOKEN).")
-
-    weeks = fetch_weeks(opts.user, tok)
+def build_svg(weeks, opts, generated_at=None):
     grid, counts = calendar_grid(weeks)
     months, seen = [], None
     for c, w in enumerate(weeks):
@@ -365,10 +381,29 @@ def main():
         if left == 0:
             break
 
+    svg = render(grid, counts, months, route, eats, growth, opts.theme, opts, generated_at)
+    return svg, len(eats), maxlen, left
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Turn a GitHub contribution graph into a Snake game (animated SVG).")
+    ap.add_argument("--user", default=os.environ.get("GH_USER") or os.environ.get("GITHUB_REPOSITORY_OWNER"),
+                    help="GitHub username (defaults to the Actions repo owner)")
+    ap.add_argument("--output", default="dist/snake.svg", help="output svg path")
+    ap.add_argument("--theme", default="green", choices=list(THEMES), help="color theme")
+    ap.add_argument("--frame", action="store_true", help="draw a rounded window frame")
+    ap.add_argument("--no-counter", dest="counter", action="store_false", help="hide the commits-eaten counter")
+    ap.set_defaults(counter=True)
+    opts = ap.parse_args()
+    if not opts.user:
+        sys.exit("error: --user is required (or set GH_USER / run in Actions)")
+
+    weeks = fetch_weeks(opts.user)
+    svg, eaten, maxlen, left = build_svg(weeks, opts)
     os.makedirs(os.path.dirname(os.path.abspath(opts.output)), exist_ok=True)
     with open(opts.output, "w") as f:
-        f.write(render(grid, counts, months, route, eats, growth, opts.theme, opts))
-    print(f"wrote {opts.output} — {len(eats)} cells eaten, snake grew to {maxlen}, {left} left over")
+        f.write(svg)
+    print(f"wrote {opts.output} — {eaten} cells eaten, snake grew to {maxlen}, {left} left over")
 
 
 if __name__ == "__main__":

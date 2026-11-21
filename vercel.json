@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/snake.py": {
+      "includeFiles": ".github/scripts/*.py",
+      "excludeFiles": "{profile-assets/**,.github/scripts/test_*.py}"
+    }
+  }
+}
