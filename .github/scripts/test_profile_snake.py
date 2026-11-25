@@ -57,23 +57,33 @@ class LiveSnakeTest(unittest.TestCase):
             }]}]
 
         with (
-            patch("serve_snake.fetch_weeks", side_effect=[calendar(9), calendar(10)]) as fetch,
+            patch(
+                "serve_snake.fetch_weeks",
+                side_effect=[calendar(9), calendar(10), calendar(10)],
+            ) as fetch,
             ThreadingHTTPServer(("127.0.0.1", 0), SnakeHandler) as server,
         ):
             thread = Thread(target=server.serve_forever)
             thread.start()
             try:
-                url = f"http://127.0.0.1:{server.server_port}/api/snake?theme=dark"
-                for count in (9, 10):
+                requests = (
+                    (9, "dark", "#161b22"),
+                    (10, "dark", "#161b22"),
+                    (10, "light", "#ebedf0"),
+                )
+                for count, theme, empty_day_color in requests:
+                    url = f"http://127.0.0.1:{server.server_port}/api/snake?theme={theme}"
                     with urlopen(url, timeout=5) as response:
                         self.assertEqual(response.headers.get_content_type(), "image/svg+xml")
                         self.assertIn("no-store", response.headers["Cache-Control"])
-                        self.assertIn(f">{count} contributions<", response.read().decode())
+                        svg = response.read().decode()
+                        self.assertIn(f">{count} contributions<", svg)
+                        self.assertIn(empty_day_color, svg)
             finally:
                 server.shutdown()
                 thread.join()
 
-        self.assertEqual(fetch.call_count, 2)
+        self.assertEqual(fetch.call_count, 3)
 
 
 if __name__ == "__main__":

@@ -1,25 +1,17 @@
 #!/usr/bin/env python3
-"""snake-and-commits — turn your GitHub contribution graph into a Snake game.
+"""Render a Snake game from a GitHub contribution graph.
 
 The snake plays a real, winnable game of Snake over your contribution grid:
 it hunts every commit cell sparse-to-dense with BFS pathfinding, never crosses
 its own body, grows one segment per cell eaten, fades a gradient from a bright
 head to a dim tail, and tallies the commits it eats. Pure animated SVG (CSS +
-no JS), so it renders anywhere GitHub shows an image. Stdlib only.
-
-Usage:
-    python generate.py --user OCTOCAT --output dist/snake.svg
-    python generate.py --user OCTOCAT --theme blue --frame
-
-Data comes from the public GitHub profile contribution calendar.
+no JS), so it renders anywhere GitHub shows an image. Data comes from the
+public GitHub profile contribution calendar.
 """
 # Adapted from dahan8473/snake-and-commits at
 # 4ec3eec8531727c9679cd9f8e1c7d60ba1dc7b23. Local change: normalize partial
 # calendar weeks by weekday before solving/rendering. See LICENSE.snake-and-commits.
-import argparse
-import os
 import re
-import sys
 import urllib.parse
 import urllib.request
 from bisect import bisect_right
@@ -37,34 +29,13 @@ BASE_LEN = 3
 MONTHS = ["", "jan", "feb", "mar", "apr", "may", "jun",
           "jul", "aug", "sep", "oct", "nov", "dec"]
 
-# Each theme: the 5-step contribution ramp (empty..brightest), the snake head
-# and body, a 4-stop age gradient (bright head -> dim tail), label + frame.
-THEMES = {
-    "green": dict(
-        levels=["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
-        snake="#39d353", head="#b7ffd0",
-        ramp=[(1, "#8affc1"), (4, "#39d353"), (10, "#26a641"), (21, "#006d32")],
-        text="#7d8590", frame_bg="#0d1117", frame_border="#30363d",
-    ),
-    "blue": dict(
-        levels=["#161b22", "#0f2f56", "#1f5fa6", "#3f8bd6", "#79c0ff"],
-        snake="#58a6ff", head="#c9e4ff",
-        ramp=[(1, "#c9e4ff"), (4, "#58a6ff"), (10, "#3f83d6"), (21, "#2e62a8")],
-        text="#7d8590", frame_bg="#0d1117", frame_border="#22406a",
-    ),
-    "amber": dict(
-        levels=["#1a1710", "#3d2f0e", "#7a5c14", "#c99a1e", "#ffd257"],
-        snake="#ffd257", head="#fff2c2",
-        ramp=[(1, "#fff2c2"), (4, "#ffd257"), (10, "#c99a1e"), (21, "#7a5c14")],
-        text="#8a7752", frame_bg="#0d0b07", frame_border="#4d3d16",
-    ),
-    "matrix": dict(
-        levels=["#0a0f0a", "#0d3d1a", "#12742f", "#1fb84e", "#39ff7a"],
-        snake="#39ff7a", head="#d6ffe4",
-        ramp=[(1, "#d6ffe4"), (4, "#39ff7a"), (10, "#1fb84e"), (21, "#12742f")],
-        text="#3fa060", frame_bg="#000000", frame_border="#123d1f",
-    ),
-}
+# Dark green contribution ramp and snake colors used by the profile image.
+THEME = dict(
+    levels=["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+    head="#b7ffd0",
+    ramp=[(1, "#8affc1"), (4, "#39d353"), (10, "#26a641"), (21, "#006d32")],
+    text="#7d8590",
+)
 
 
 class ProfileCalendar(HTMLParser):
@@ -251,11 +222,11 @@ def solve(grid, cap=999):
         if nxt is None:
             break
         step_to(nxt)
-    return route, eats, growth, BASE_LEN + len(growth), len(remaining)
+    return route, eats, growth, len(remaining)
 
 
-def render(grid, counts, months, route, eats, growth, theme, opts, generated_at=None):
-    t = THEMES[theme]
+def render(grid, counts, months, route, eats, growth, generated_at=None):
+    t = THEME
     ncols = len(grid)
     n = len(route)
     total = n + PAUSE_STEPS
@@ -326,46 +297,22 @@ def render(grid, counts, months, route, eats, growth, theme, opts, generated_at=
         contributions = sum(map(sum, counts))
         body.append(f'<text class="lab" x="{MX}" y="{ly+9}">{contributions:,} contributions</text>')
 
-    if opts.counter:
-        total_commits = sum(counts[c][r] for _, (c, r) in eats)
-        states, val = [(0, 0)], 0
-        for s, (c, r) in eats:
-            val += counts[c][r]
-            states.append((s, val))
-        body.append(f'<text class="lab" x="{MX}" y="{ly+9}">$ commits eaten:</text>')
-        for i, (s, v) in enumerate(states):
-            a = pct(s)
-            b = pct(states[i + 1][0]) if i + 1 < len(states) else 100.0
-            if b <= a:
-                continue
-            fr = (f"0% {{ opacity:0; }} {a}% {{ opacity:1; }} {b}% {{ opacity:0; }} 100% {{ opacity:0; }}"
-                  if b < 100 else f"0% {{ opacity:0; }} {a}% {{ opacity:1; }} 100% {{ opacity:1; }}")
-            css.append(f"@keyframes m{i} {{ {fr} }}\n.m{i} {{ animation:m{i} {dur:.1f}s steps(1,end) infinite; }}")
-            body.append(f'<text class="cnt m{i}" opacity="0" x="{MX+102}" y="{ly+9}">{v}/{total_commits}</text>')
-
     w = MX * 2 + ncols * PITCH - GAP
     h = MTOP + 7 * PITCH - GAP + MBOT
-    frame_open = frame_close = ""
-    if opts.frame:
-        frame_open = f'<rect x="1" y="1" width="{w-2}" height="{h-2}" rx="12" fill="{t["frame_bg"]}" stroke="{t["frame_border"]}"/>'
-        frame_close = f'<rect x="1" y="1" width="{w-2}" height="{h-2}" rx="12" fill="none" stroke="{t["frame_border"]}"/>'
     mono = "ui-monospace,'SF Mono',Menlo,Consolas,monospace"
     timestamp = f' data-generated-at="{generated_at}"' if generated_at else ""
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}"{timestamp}>
   <style>
     .lab {{ font-family:{mono}; font-size:9.5px; fill:{t['text']}; }}
-    .cnt {{ font-family:{mono}; font-size:9.5px; fill:{t['snake']}; }}
     @media (prefers-reduced-motion) {{ * {{ animation:none !important; }} }}
     {chr(10).join(css)}
   </style>
-  {frame_open}
   {chr(10).join('  ' + b for b in body)}
-  {frame_close}
 </svg>
 """
 
 
-def build_svg(weeks, opts, generated_at=None):
+def build_svg(weeks, generated_at=None):
     grid, counts = calendar_grid(weeks)
     months, seen = [], None
     for c, w in enumerate(weeks):
@@ -377,34 +324,8 @@ def build_svg(weeks, opts, generated_at=None):
         months = months[1:]
 
     for cap in (48, 40, 34, 28, 24, 20, 16, 12):
-        route, eats, growth, maxlen, left = solve(grid, cap)
+        route, eats, growth, left = solve(grid, cap)
         if left == 0:
             break
 
-    svg = render(grid, counts, months, route, eats, growth, opts.theme, opts, generated_at)
-    return svg, len(eats), maxlen, left
-
-
-def main():
-    ap = argparse.ArgumentParser(description="Turn a GitHub contribution graph into a Snake game (animated SVG).")
-    ap.add_argument("--user", default=os.environ.get("GH_USER") or os.environ.get("GITHUB_REPOSITORY_OWNER"),
-                    help="GitHub username (defaults to the Actions repo owner)")
-    ap.add_argument("--output", default="dist/snake.svg", help="output svg path")
-    ap.add_argument("--theme", default="green", choices=list(THEMES), help="color theme")
-    ap.add_argument("--frame", action="store_true", help="draw a rounded window frame")
-    ap.add_argument("--no-counter", dest="counter", action="store_false", help="hide the commits-eaten counter")
-    ap.set_defaults(counter=True)
-    opts = ap.parse_args()
-    if not opts.user:
-        sys.exit("error: --user is required (or set GH_USER / run in Actions)")
-
-    weeks = fetch_weeks(opts.user)
-    svg, eaten, maxlen, left = build_svg(weeks, opts)
-    os.makedirs(os.path.dirname(os.path.abspath(opts.output)), exist_ok=True)
-    with open(opts.output, "w") as f:
-        f.write(svg)
-    print(f"wrote {opts.output} — {eaten} cells eaten, snake grew to {maxlen}, {left} left over")
-
-
-if __name__ == "__main__":
-    main()
+    return render(grid, counts, months, route, eats, growth, generated_at)

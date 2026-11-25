@@ -4,12 +4,24 @@ import os
 import sys
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from types import SimpleNamespace
 from urllib.error import URLError
 from urllib.parse import parse_qs, urlsplit
 
 from generate_snake import build_svg, fetch_weeks
-from prepare_snake import COLORS
+
+
+LIGHT_THEME_COLORS = {
+    "#161b22": "#ebedf0",
+    "#0e4429": "#9be9a8",
+    "#006d32": "#40c463",
+    "#26a641": "#30a14e",
+    "#39d353": "#216e39",
+    "#b7ffd0": "#0d532a",
+    "#8affc1": "#1a7f37",
+    "#7d8590": "#57606a",
+    "#0d1117": "#ffffff",
+    "#30363d": "#d0d7de",
+}
 
 
 class SnakeHandler(BaseHTTPRequestHandler):
@@ -23,15 +35,14 @@ class SnakeHandler(BaseHTTPRequestHandler):
         try:
             weeks = fetch_weeks("pqminh27")
             generated_at = datetime.now(timezone.utc).isoformat()
-            opts = SimpleNamespace(theme="green", frame=False, counter=False)
-            svg, _, _, _ = build_svg(weeks, opts, generated_at)
+            svg = build_svg(weeks, generated_at)
         except (URLError, OSError, ValueError, KeyError) as error:
             print(f"Unable to generate contribution snake: {error}", file=sys.stderr)
             self.send_error(502, "GitHub contribution calendar unavailable")
             return
 
         if theme == "light":
-            for dark, light in COLORS.items():
+            for dark, light in LIGHT_THEME_COLORS.items():
                 svg = svg.replace(dark, light)
 
         content = svg.encode("utf-8")
