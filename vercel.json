@@ -3,7 +3,7 @@
   "functions": {
     "api/snake.py": {
       "includeFiles": ".github/scripts/*.py",
-      "excludeFiles": "{profile-assets/**,.github/scripts/test_*.py}"
+      "excludeFiles": ".github/scripts/test_*.py"
     }
   }
 }

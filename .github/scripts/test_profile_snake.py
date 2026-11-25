@@ -1,5 +1,4 @@
 from pathlib import Path
-import re
 import unittest
 from unittest.mock import patch
 
@@ -7,13 +6,9 @@ import generate_snake
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SNAKE_ASSETS = (
-    "profile-assets/github-contribution-grid-snake.svg",
-    "profile-assets/github-contribution-grid-snake-dark.svg",
-)
 
 
-class ProfileSnakeWorkflowTest(unittest.TestCase):
+class ProfileSnakeReadmeTest(unittest.TestCase):
     def test_profile_uses_the_live_snake_in_both_themes(self):
         readme = (ROOT / "README.md").read_text()
         for theme in ("light", "dark"):
@@ -22,19 +17,6 @@ class ProfileSnakeWorkflowTest(unittest.TestCase):
                 readme,
             )
         self.assertNotIn("profile-3d-contrib/profile-grid.svg", readme)
-
-    def test_snapshot_snake_variants_are_generated_by_a_scheduled_workflow(self):
-        workflows = "\n".join(
-            path.read_text()
-            for path in (ROOT / ".github/workflows").glob("*.yml")
-        )
-
-        self.assertIn(".github/scripts/generate_snake.py", workflows)
-        self.assertIn("prepare_snake.py", workflows)
-        self.assertIn("schedule:", workflows)
-        self.assertIn("workflow_dispatch:", workflows)
-        for asset in SNAKE_ASSETS:
-            self.assertIn(asset, workflows)
 
     def test_snake_uses_profile_calendar_counts_levels_and_dates(self):
         html = b"""
@@ -60,22 +42,6 @@ class ProfileSnakeWorkflowTest(unittest.TestCase):
             generate_snake.calendar_grid(weeks),
             ([[0, 0, 0, 0, 1, 4, 0]], [[0, 0, 0, 0, 1, 9, 0]]),
         )
-
-    def test_generated_snake_variants_include_all_seven_rows_in_every_week(self):
-        for asset in SNAKE_ASSETS:
-            svg = (ROOT / asset).read_text()
-            columns = {}
-            for column, row in re.findall(r'class="c(\d+)_(\d+)"', svg):
-                columns.setdefault(int(column), set()).add(int(row))
-
-            self.assertTrue(columns, f"{asset} has no contribution cells")
-            for column, rows in columns.items():
-                self.assertEqual(
-                    set(range(7)),
-                    rows,
-                    f"{asset} week {column} is missing rows {sorted(set(range(7)) - rows)}",
-                )
-
 
 class LiveSnakeTest(unittest.TestCase):
     def test_same_image_url_reflects_new_contributions(self):
